@@ -1,79 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bea Love Question 💖</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bea Love Question 💖</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+  * { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-      background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6d6ff);
-      overflow: hidden;
-    }
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6d6ff);
+  }
 
-    .container {
-      text-align: center;
-      background: rgba(255, 255, 255, 0.7);
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      backdrop-filter: blur(12px);
-      width: min(90vw, 420px);
-    }
+  .container {
+    text-align: center;
+    background: rgba(255,255,255,0.7);
+    padding: 30px;
+    border-radius: 20px;
+    width: min(90vw, 420px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 2;
+  }
 
-    h1 {
-      color: #5a4fcf;
-      margin-bottom: 25px;
-      font-size: clamp(22px, 4vw, 32px);
-    }
+  h1 {
+    color: #5a4fcf;
+    margin-bottom: 20px;
+  }
 
-    .buttons {
-      position: relative;
-      height: 150px;
-      overflow: hidden;
-    }
+  .buttons {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+  }
 
-    button {
-      padding: 12px 22px;
-      font-size: clamp(15px, 2.5vw, 18px);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      margin: 8px;
-    }
+  button {
+    padding: 12px 22px;
+    font-size: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+  }
 
-    #yesBtn {
-      background-color: #a0e7e5;
-    }
+  #yesBtn {
+    background: #a0e7e5;
+    position: relative;
+    z-index: 2;
+  }
 
-    #yesBtn:hover {
-      transform: scale(1.1);
-    }
+  #noBtn {
+    background: #ffaecc;
+    position: absolute;
+  }
 
-    #noBtn {
-      background-color: #ffaecc;
-      position: absolute;
-    }
+  #message {
+    margin-top: 15px;
+    font-size: 20px;
+    display: none;
+    color: #444;
+  }
 
-    #message {
-      margin-top: 20px;
-      font-size: clamp(16px, 2.5vw, 20px);
-      display: none;
-      color: #444;
+  /* Confetti pieces */
+  .confetti {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: red;
+    top: -10px;
+    animation: fall 3s linear forwards;
+    z-index: 999;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(720deg);
+      opacity: 0;
     }
-  </style>
+  }
+</style>
 </head>
+
 <body>
 
 <div class="container">
@@ -93,26 +107,48 @@
   const message = document.getElementById("message");
   const playArea = document.getElementById("playArea");
 
-  function moveButton() {
-    const rect = playArea.getBoundingClientRect();
+  let yesRect;
 
-    const maxX = rect.width - noBtn.offsetWidth;
-    const maxY = rect.height - noBtn.offsetHeight;
+  function updateYesRect() {
+    yesRect = yesBtn.getBoundingClientRect();
+  }
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+  function moveNoButton() {
+    updateYesRect();
+
+    const area = playArea.getBoundingClientRect();
+
+    let x, y;
+    let safe = false;
+
+    // ensure no overlap with Yes button
+    while (!safe) {
+      x = Math.random() * (area.width - noBtn.offsetWidth);
+      y = Math.random() * (area.height - noBtn.offsetHeight);
+
+      const noLeft = area.left + x;
+      const noTop = area.top + y;
+
+      const overlap =
+        noLeft < yesRect.right &&
+        noLeft + noBtn.offsetWidth > yesRect.left &&
+        noTop < yesRect.bottom &&
+        noTop + noBtn.offsetHeight > yesRect.top;
+
+      if (!overlap) safe = true;
+    }
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
   }
 
-  // Start in random position
-  window.onload = moveButton;
+  // Start position
+  window.onload = moveNoButton;
 
   // Desktop hover
-  noBtn.addEventListener("mouseover", moveButton);
+  noBtn.addEventListener("mouseover", moveNoButton);
 
-  // Touch (iPad/iPhone)
+  // iPad / touch avoidance
   playArea.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
     const rect = noBtn.getBoundingClientRect();
@@ -122,14 +158,30 @@
       touch.clientY - (rect.top + rect.height / 2)
     );
 
-    if (distance < 80) {
-      moveButton();
-    }
+    if (distance < 90) moveNoButton();
   });
 
-  // Yes click
+  // 🎉 Confetti function
+  function launchConfetti() {
+    for (let i = 0; i < 60; i++) {
+      const c = document.createElement("div");
+      c.classList.add("confetti");
+
+      c.style.left = Math.random() * window.innerWidth + "px";
+      c.style.background = `hsl(${Math.random() * 360}, 80%, 60%)`;
+      c.style.animationDuration = (2 + Math.random() * 2) + "s";
+
+      document.body.appendChild(c);
+
+      setTimeout(() => c.remove(), 4000);
+    }
+  }
+
+  // ❤️ Yes button action
   yesBtn.addEventListener("click", () => {
     message.style.display = "block";
+    noBtn.style.display = "none";
+    launchConfetti();
   });
 </script>
 
