@@ -11,21 +11,26 @@
   body {
     margin: 0;
     height: 100vh;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6d6ff);
-    overflow: hidden;
   }
 
+  /* 🎬 Cinematic intro */
   .container {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: all 1.2s ease;
+
     text-align: center;
     background: rgba(255,255,255,0.75);
     padding: 60px 40px;
     border-radius: 25px;
     width: min(92vw, 650px);
-    min-height: 450px;
+    min-height: 460px;
 
     display: flex;
     flex-direction: column;
@@ -34,6 +39,11 @@
 
     backdrop-filter: blur(12px);
     box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+  }
+
+  .container.show {
+    opacity: 1;
+    transform: scale(1);
   }
 
   h1 {
@@ -45,10 +55,7 @@
   .buttons {
     position: relative;
     width: 100%;
-    height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 220px;
   }
 
   button {
@@ -63,11 +70,19 @@
   #yesBtn {
     background: #a0e7e5;
     z-index: 2;
+    animation: pulse 1.8s ease-in-out infinite;
   }
 
   #noBtn {
     background: #ffaecc;
     z-index: 3;
+  }
+
+  /* 💓 Pulse effect */
+  @keyframes pulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.08); }
+    100% { transform: scale(1); }
   }
 
   #message {
@@ -89,6 +104,7 @@
     opacity: 1;
   }
 
+  /* 🎉 Confetti */
   .confetti {
     position: fixed;
     width: 8px;
@@ -109,7 +125,7 @@
 
 <body>
 
-<div class="container">
+<div class="container" id="card">
   <h1>Bea… do you love me? 💕</h1>
 
   <div class="buttons" id="playArea">
@@ -122,27 +138,56 @@
 </div>
 
 <script>
-  const noBtn = document.getElementById("noBtn");
+  const card = document.getElementById("card");
+  const playArea = document.getElementById("playArea");
   const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
   const message = document.getElementById("message");
   const hoverMsg = document.getElementById("hoverMsg");
-  const playArea = document.getElementById("playArea");
 
   let activated = false;
+  let idle = true;
 
+  /* 🎬 Cinematic intro timing */
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      card.classList.add("show");
+      setTimeout(() => centerButtons(), 400);
+    }, 200);
+  });
+
+  /* 🎯 Initial clean separation */
   function centerButtons() {
     const rect = playArea.getBoundingClientRect();
 
-    const x = rect.width / 2 - noBtn.offsetWidth / 2;
-    const y = rect.height / 2 - noBtn.offsetHeight / 2;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const offset = 90;
 
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    yesBtn.style.left = (centerX - offset - yesBtn.offsetWidth / 2) + "px";
+    yesBtn.style.top = (centerY - yesBtn.offsetHeight / 2) + "px";
 
-    yesBtn.style.left = x + "px";
-    yesBtn.style.top = y + "px";
+    noBtn.style.left = (centerX + offset - noBtn.offsetWidth / 2) + "px";
+    noBtn.style.top = (centerY - noBtn.offsetHeight / 2) + "px";
   }
 
+  /* 🧲 Magnetic pull effect (idle only) */
+  function magneticPull() {
+    if (!idle || activated) return;
+
+    const yesRect = yesBtn.getBoundingClientRect();
+    const noRect = noBtn.getBoundingClientRect();
+
+    const dx = (yesRect.left - noRect.left) * 0.02;
+    const dy = (yesRect.top - noRect.top) * 0.02;
+
+    noBtn.style.left = (noRect.left - playArea.getBoundingClientRect().left + dx) + "px";
+    noBtn.style.top = (noRect.top - playArea.getBoundingClientRect().top + dy) + "px";
+  }
+
+  setInterval(magneticPull, 60);
+
+  /* 😈 Escape logic */
   function moveNoButton() {
     const rect = playArea.getBoundingClientRect();
 
@@ -176,6 +221,7 @@
 
   function activateEscape() {
     activated = true;
+    idle = false;
     moveNoButton();
   }
 
@@ -186,6 +232,7 @@
   noBtn.addEventListener("mousedown", activateEscape);
   noBtn.addEventListener("touchstart", activateEscape);
 
+  /* 💖 Yes hover */
   yesBtn.addEventListener("mouseenter", () => {
     hoverMsg.classList.add("show");
   });
@@ -194,6 +241,7 @@
     hoverMsg.classList.remove("show");
   });
 
+  /* 🎉 Yes click */
   yesBtn.addEventListener("click", () => {
     message.style.display = "block";
     noBtn.style.display = "none";
@@ -201,8 +249,9 @@
     launchConfetti();
   });
 
+  /* 💥 Confetti */
   function launchConfetti() {
-    for (let i = 0; i < 70; i++) {
+    for (let i = 0; i < 80; i++) {
       const c = document.createElement("div");
       c.classList.add("confetti");
 
@@ -214,8 +263,6 @@
       setTimeout(() => c.remove(), 4000);
     }
   }
-
-  window.onload = centerButtons;
 </script>
 
 </body>
