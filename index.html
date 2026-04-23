@@ -6,29 +6,26 @@
 <title>Bea Love Question 💖</title>
 
 <style>
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
     height: 100vh;
-    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6d6ff);
+    overflow: hidden;
   }
 
-  /* 🟣 BIGGER CENTERED BOX */
   .container {
     text-align: center;
     background: rgba(255,255,255,0.75);
     padding: 60px 40px;
     border-radius: 25px;
     width: min(92vw, 650px);
-    min-height: 420px;
+    min-height: 450px;
 
     display: flex;
     flex-direction: column;
@@ -41,7 +38,7 @@
 
   h1 {
     color: #5a4fcf;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-size: clamp(26px, 4vw, 40px);
   }
 
@@ -49,6 +46,7 @@
     position: relative;
     width: 100%;
     height: 180px;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -64,20 +62,33 @@
 
   #yesBtn {
     background: #a0e7e5;
+    margin-right: 20px;
     z-index: 2;
-    position: relative;
   }
 
   #noBtn {
     background: #ffaecc;
-    position: absolute;
+    position: relative;
   }
 
   #message {
-    margin-top: 25px;
+    margin-top: 20px;
     font-size: 22px;
     display: none;
     color: #444;
+  }
+
+  /* 💬 Hover warning */
+  #hoverMsg {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #5a4fcf;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  #hoverMsg.show {
+    opacity: 1;
   }
 
   /* 🎉 Confetti */
@@ -109,6 +120,7 @@
     <button id="noBtn">No 😢</button>
   </div>
 
+  <div id="hoverMsg">Are you sure? 👀💖</div>
   <div id="message">I knew it, Bea! 💖🥰</div>
 </div>
 
@@ -116,57 +128,56 @@
   const noBtn = document.getElementById("noBtn");
   const yesBtn = document.getElementById("yesBtn");
   const message = document.getElementById("message");
+  const hoverMsg = document.getElementById("hoverMsg");
   const playArea = document.getElementById("playArea");
 
-  let yesRect;
-
-  function updateYesRect() {
-    yesRect = yesBtn.getBoundingClientRect();
-  }
+  let activated = false;
 
   function moveNoButton() {
-    updateYesRect();
+    const rect = playArea.getBoundingClientRect();
 
-    const area = playArea.getBoundingClientRect();
+    const maxX = rect.width - noBtn.offsetWidth;
+    const maxY = rect.height - noBtn.offsetHeight;
 
-    let x, y, safe = false;
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
 
-    while (!safe) {
-      x = Math.random() * (area.width - noBtn.offsetWidth);
-      y = Math.random() * (area.height - noBtn.offsetHeight);
-
-      const noLeft = area.left + x;
-      const noTop = area.top + y;
-
-      const overlap =
-        noLeft < yesRect.right &&
-        noLeft + noBtn.offsetWidth > yesRect.left &&
-        noTop < yesRect.bottom &&
-        noTop + noBtn.offsetHeight > yesRect.top;
-
-      if (!overlap) safe = true;
-    }
-
+    noBtn.style.position = "absolute";
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
   }
 
-  window.onload = moveNoButton;
+  function activateEscape() {
+    activated = true;
+    moveNoButton();
+  }
 
-  noBtn.addEventListener("mouseover", moveNoButton);
-
-  playArea.addEventListener("touchmove", (e) => {
-    const touch = e.touches[0];
-    const rect = noBtn.getBoundingClientRect();
-
-    const distance = Math.hypot(
-      touch.clientX - (rect.left + rect.width / 2),
-      touch.clientY - (rect.top + rect.height / 2)
-    );
-
-    if (distance < 90) moveNoButton();
+  // 🖱 No button behavior
+  noBtn.addEventListener("mouseenter", () => {
+    if (activated) moveNoButton();
   });
 
+  noBtn.addEventListener("mousedown", activateEscape);
+  noBtn.addEventListener("touchstart", activateEscape);
+
+  // ❤️ Yes hover warning
+  yesBtn.addEventListener("mouseenter", () => {
+    hoverMsg.classList.add("show");
+  });
+
+  yesBtn.addEventListener("mouseleave", () => {
+    hoverMsg.classList.remove("show");
+  });
+
+  // 🎉 Yes click
+  yesBtn.addEventListener("click", () => {
+    message.style.display = "block";
+    noBtn.style.display = "none";
+    hoverMsg.style.display = "none";
+    launchConfetti();
+  });
+
+  // 💥 Confetti
   function launchConfetti() {
     for (let i = 0; i < 70; i++) {
       const c = document.createElement("div");
@@ -180,12 +191,6 @@
       setTimeout(() => c.remove(), 4000);
     }
   }
-
-  yesBtn.addEventListener("click", () => {
-    message.style.display = "block";
-    noBtn.style.display = "none";
-    launchConfetti();
-  });
 </script>
 
 </body>
