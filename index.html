@@ -3,266 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bea Love Question 💖</title>
+<title>For Bea 💖</title>
 
 <style>
-  * { box-sizing: border-box; }
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6d6ff);
+  overflow: hidden;
+}
 
-  body {
-    margin: 0;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6d6ff);
-  }
+.container {
+  width: min(92vw, 650px);
+  min-height: 460px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 25px;
+  padding: 40px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-  /* 🎬 Cinematic intro */
-  .container {
+.step {
+  display: none;
+  animation: fade 0.6s ease;
+}
+
+.step.active {
+  display: block;
+}
+
+@keyframes fade {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+button {
+  padding: 14px 24px;
+  margin-top: 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.nextBtn {
+  background: #a0e7e5;
+}
+
+.buttons {
+  position: relative;
+  height: 200px;
+}
+
+#yesBtn {
+  background: #a0e7e5;
+  position: absolute;
+}
+
+#noBtn {
+  background: #ffaecc;
+  position: absolute;
+  transition: left 0.2s ease, top 0.2s ease;
+}
+
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  top: -10px;
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
     opacity: 0;
-    transform: scale(0.92);
-    transition: all 1.2s ease;
-
-    text-align: center;
-    background: rgba(255,255,255,0.75);
-    padding: 60px 40px;
-    border-radius: 25px;
-    width: min(92vw, 650px);
-    min-height: 460px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    backdrop-filter: blur(12px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
   }
-
-  .container.show {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  h1 {
-    color: #5a4fcf;
-    margin-bottom: 20px;
-    font-size: clamp(26px, 4vw, 40px);
-  }
-
-  .buttons {
-    position: relative;
-    width: 100%;
-    height: 220px;
-  }
-
-  button {
-    padding: 14px 26px;
-    font-size: 18px;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    position: absolute;
-  }
-
-  #yesBtn {
-    background: #a0e7e5;
-    z-index: 2;
-    animation: pulse 1.8s ease-in-out infinite;
-  }
-
-  #noBtn {
-    background: #ffaecc;
-    z-index: 3;
-  }
-
-  /* 💓 Pulse effect */
-  @keyframes pulse {
-    0%   { transform: scale(1); }
-    50%  { transform: scale(1.08); }
-    100% { transform: scale(1); }
-  }
-
-  #message {
-    margin-top: 20px;
-    font-size: 22px;
-    display: none;
-    color: #444;
-  }
-
-  #hoverMsg {
-    margin-top: 10px;
-    font-size: 18px;
-    color: #5a4fcf;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-
-  #hoverMsg.show {
-    opacity: 1;
-  }
-
-  /* 🎉 Confetti */
-  .confetti {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    top: -10px;
-    animation: fall 3s linear forwards;
-    z-index: 999;
-  }
-
-  @keyframes fall {
-    to {
-      transform: translateY(110vh) rotate(720deg);
-      opacity: 0;
-    }
-  }
+}
 </style>
 </head>
 
 <body>
 
-<div class="container" id="card">
-  <h1>Bea… do you love me? 💕</h1>
+<div class="container">
 
-  <div class="buttons" id="playArea">
-    <button id="yesBtn">Yes 😍</button>
-    <button id="noBtn">No 😢</button>
+  <!-- STEP 1 -->
+  <div class="step active" id="step1">
+    <h1>Hi Bea 💕</h1>
+    <p>I made something for you…</p>
+    <button class="nextBtn" onclick="nextStep()">Continue</button>
   </div>
 
-  <div id="hoverMsg">Are you sure? 👀💖</div>
-  <div id="message">I knew it, Bea! 💖🥰</div>
+  <!-- STEP 2 -->
+  <div class="step" id="step2">
+    <h1>Be honest… 👀</h1>
+    <p>Do you smile when you see me? 😏</p>
+    <button class="nextBtn" onclick="nextStep()">Maybe...</button>
+  </div>
+
+  <!-- STEP 3 (Your game) -->
+  <div class="step" id="step3">
+    <h1>Okay final question… 💖</h1>
+    <p>Bea… do you love me?</p>
+
+    <div class="buttons" id="playArea">
+      <button id="yesBtn">Yes 😍</button>
+      <button id="noBtn">No 😢</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step" id="step4">
+    <h1>I knew it 😭💖</h1>
+    <p>You just made my whole day.</p>
+    <p>You're stuck with me now 😏</p>
+  </div>
+
 </div>
 
 <script>
-  const card = document.getElementById("card");
-  const playArea = document.getElementById("playArea");
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
-  const message = document.getElementById("message");
-  const hoverMsg = document.getElementById("hoverMsg");
+let currentStep = 1;
 
-  let activated = false;
-  let idle = true;
+function nextStep() {
+  document.getElementById(`step${currentStep}`).classList.remove("active");
+  currentStep++;
+  document.getElementById(`step${currentStep}`).classList.add("active");
 
-  /* 🎬 Cinematic intro timing */
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      card.classList.add("show");
-      setTimeout(() => centerButtons(), 400);
-    }, 200);
-  });
-
-  /* 🎯 Initial clean separation */
-  function centerButtons() {
-    const rect = playArea.getBoundingClientRect();
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const offset = 90;
-
-    yesBtn.style.left = (centerX - offset - yesBtn.offsetWidth / 2) + "px";
-    yesBtn.style.top = (centerY - yesBtn.offsetHeight / 2) + "px";
-
-    noBtn.style.left = (centerX + offset - noBtn.offsetWidth / 2) + "px";
-    noBtn.style.top = (centerY - noBtn.offsetHeight / 2) + "px";
+  if (currentStep === 3) {
+    setTimeout(centerButtons, 200);
   }
+}
 
-  /* 🧲 Magnetic pull effect (idle only) */
-  function magneticPull() {
-    if (!idle || activated) return;
+/* --- BUTTON LOGIC --- */
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const playArea = document.getElementById("playArea");
 
-    const yesRect = yesBtn.getBoundingClientRect();
-    const noRect = noBtn.getBoundingClientRect();
+function centerButtons() {
+  const rect = playArea.getBoundingClientRect();
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
 
-    const dx = (yesRect.left - noRect.left) * 0.02;
-    const dy = (yesRect.top - noRect.top) * 0.02;
+  yesBtn.style.left = (centerX - 100) + "px";
+  yesBtn.style.top = centerY + "px";
 
-    noBtn.style.left = (noRect.left - playArea.getBoundingClientRect().left + dx) + "px";
-    noBtn.style.top = (noRect.top - playArea.getBoundingClientRect().top + dy) + "px";
+  noBtn.style.left = (centerX + 40) + "px";
+  noBtn.style.top = centerY + "px";
+}
+
+function moveNoButton() {
+  const rect = playArea.getBoundingClientRect();
+  const padding = 10;
+
+  const maxX = rect.width - noBtn.offsetWidth - padding;
+  const maxY = rect.height - noBtn.offsetHeight - padding;
+
+  const x = Math.max(padding, Math.random() * maxX);
+  const y = Math.max(padding, Math.random() * maxY);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("mouseenter", moveNoButton);
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  moveNoButton();
+});
+
+yesBtn.addEventListener("click", () => {
+  launchConfetti();
+  nextStep();
+});
+
+/* --- CONFETTI --- */
+function launchConfetti() {
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement("div");
+    c.classList.add("confetti");
+
+    c.style.left = Math.random() * window.innerWidth + "px";
+    c.style.background = `hsl(${Math.random()*360}, 80%, 60%)`;
+    c.style.animationDuration = (2 + Math.random()*2) + "s";
+
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
   }
-
-  setInterval(magneticPull, 60);
-
-  /* 😈 Escape logic */
-  function moveNoButton() {
-    const rect = playArea.getBoundingClientRect();
-
-    const maxX = rect.width - noBtn.offsetWidth;
-    const maxY = rect.height - noBtn.offsetHeight;
-
-    let x, y, safe = false;
-
-    while (!safe) {
-      x = Math.random() * maxX;
-      y = Math.random() * maxY;
-
-      const yesRect = yesBtn.getBoundingClientRect();
-      const playRect = playArea.getBoundingClientRect();
-
-      const yesLeft = yesRect.left - playRect.left;
-      const yesTop = yesRect.top - playRect.top;
-
-      const overlap =
-        x < yesLeft + yesBtn.offsetWidth &&
-        x + noBtn.offsetWidth > yesLeft &&
-        y < yesTop + yesBtn.offsetHeight &&
-        y + noBtn.offsetHeight > yesTop;
-
-      if (!overlap) safe = true;
-    }
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  }
-
-  function activateEscape() {
-    activated = true;
-    idle = false;
-    moveNoButton();
-  }
-
-  noBtn.addEventListener("mouseenter", () => {
-    if (activated) moveNoButton();
-  });
-
-  noBtn.addEventListener("mousedown", activateEscape);
-  noBtn.addEventListener("touchstart", activateEscape);
-
-  /* 💖 Yes hover */
-  yesBtn.addEventListener("mouseenter", () => {
-    hoverMsg.classList.add("show");
-  });
-
-  yesBtn.addEventListener("mouseleave", () => {
-    hoverMsg.classList.remove("show");
-  });
-
-  /* 🎉 Yes click */
-  yesBtn.addEventListener("click", () => {
-    message.style.display = "block";
-    noBtn.style.display = "none";
-    hoverMsg.style.display = "none";
-    launchConfetti();
-  });
-
-  /* 💥 Confetti */
-  function launchConfetti() {
-    for (let i = 0; i < 80; i++) {
-      const c = document.createElement("div");
-      c.classList.add("confetti");
-
-      c.style.left = Math.random() * window.innerWidth + "px";
-      c.style.background = `hsl(${Math.random() * 360}, 80%, 60%)`;
-      c.style.animationDuration = (2 + Math.random() * 2) + "s";
-
-      document.body.appendChild(c);
-      setTimeout(() => c.remove(), 4000);
-    }
-  }
+}
 </script>
 
 </body>
