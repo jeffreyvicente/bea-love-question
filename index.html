@@ -3,20 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Do You Love Me? 💖</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Bea Love Question 💖</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6d6ff);
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      backdrop-filter: blur(12px);
+      width: min(90vw, 420px);
+    }
+
+    h1 {
+      color: #5a4fcf;
+      margin-bottom: 25px;
+      font-size: clamp(22px, 4vw, 32px);
+    }
+
+    .buttons {
+      position: relative;
+      height: 150px;
+      overflow: hidden;
+    }
+
+    button {
+      padding: 12px 22px;
+      font-size: clamp(15px, 2.5vw, 18px);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      margin: 8px;
+    }
+
+    #yesBtn {
+      background-color: #a0e7e5;
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.1);
+    }
+
+    #noBtn {
+      background-color: #ffaecc;
+      position: absolute;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: clamp(16px, 2.5vw, 20px);
+      display: none;
+      color: #444;
+    }
+  </style>
 </head>
 <body>
 
 <div class="container">
   <h1>Do you love me? 💕</h1>
-  <div class="buttons">
+
+  <div class="buttons" id="playArea">
     <button id="yesBtn">Yes 😍</button>
     <button id="noBtn">No 😢</button>
   </div>
+
   <div id="message">I knew it, Bea! 💖🥰</div>
 </div>
 
-<script src="script.js"></script>
+<script>
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const message = document.getElementById("message");
+  const playArea = document.getElementById("playArea");
+
+  function moveButton() {
+    const rect = playArea.getBoundingClientRect();
+
+    const maxX = rect.width - noBtn.offsetWidth;
+    const maxY = rect.height - noBtn.offsetHeight;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
+
+  // Start in random position
+  window.onload = moveButton;
+
+  // Desktop hover
+  noBtn.addEventListener("mouseover", moveButton);
+
+  // Touch (iPad/iPhone)
+  playArea.addEventListener("touchmove", (e) => {
+    const touch = e.touches[0];
+    const rect = noBtn.getBoundingClientRect();
+
+    const distance = Math.hypot(
+      touch.clientX - (rect.left + rect.width / 2),
+      touch.clientY - (rect.top + rect.height / 2)
+    );
+
+    if (distance < 80) {
+      moveButton();
+    }
+  });
+
+  // Yes click
+  yesBtn.addEventListener("click", () => {
+    message.style.display = "block";
+  });
+</script>
+
 </body>
 </html>
