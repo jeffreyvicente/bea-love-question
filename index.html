@@ -6,7 +6,9 @@
 <title>Bea Love Question 💖</title>
 
 <style>
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
 
   body {
     margin: 0;
@@ -19,41 +21,51 @@
     background: linear-gradient(135deg, #ffd6e0, #d6f0ff, #e6d6ff);
   }
 
+  /* 🟣 BIGGER CENTERED BOX */
   .container {
     text-align: center;
-    background: rgba(255,255,255,0.7);
-    padding: 30px;
-    border-radius: 20px;
-    width: min(90vw, 420px);
+    background: rgba(255,255,255,0.75);
+    padding: 60px 40px;
+    border-radius: 25px;
+    width: min(92vw, 650px);
+    min-height: 420px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     backdrop-filter: blur(12px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    position: relative;
-    z-index: 2;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
   }
 
   h1 {
     color: #5a4fcf;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-size: clamp(26px, 4vw, 40px);
   }
 
   .buttons {
     position: relative;
-    height: 150px;
-    overflow: hidden;
+    width: 100%;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   button {
-    padding: 12px 22px;
+    padding: 14px 26px;
     font-size: 18px;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     cursor: pointer;
   }
 
   #yesBtn {
     background: #a0e7e5;
-    position: relative;
     z-index: 2;
+    position: relative;
   }
 
   #noBtn {
@@ -62,18 +74,17 @@
   }
 
   #message {
-    margin-top: 15px;
-    font-size: 20px;
+    margin-top: 25px;
+    font-size: 22px;
     display: none;
     color: #444;
   }
 
-  /* Confetti pieces */
+  /* 🎉 Confetti */
   .confetti {
     position: fixed;
     width: 8px;
     height: 8px;
-    background: red;
     top: -10px;
     animation: fall 3s linear forwards;
     z-index: 999;
@@ -118,10 +129,8 @@
 
     const area = playArea.getBoundingClientRect();
 
-    let x, y;
-    let safe = false;
+    let x, y, safe = false;
 
-    // ensure no overlap with Yes button
     while (!safe) {
       x = Math.random() * (area.width - noBtn.offsetWidth);
       y = Math.random() * (area.height - noBtn.offsetHeight);
@@ -142,13 +151,10 @@
     noBtn.style.top = y + "px";
   }
 
-  // Start position
   window.onload = moveNoButton;
 
-  // Desktop hover
   noBtn.addEventListener("mouseover", moveNoButton);
 
-  // iPad / touch avoidance
   playArea.addEventListener("touchmove", (e) => {
     const touch = e.touches[0];
     const rect = noBtn.getBoundingClientRect();
@@ -161,9 +167,8 @@
     if (distance < 90) moveNoButton();
   });
 
-  // 🎉 Confetti function
   function launchConfetti() {
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 70; i++) {
       const c = document.createElement("div");
       c.classList.add("confetti");
 
@@ -172,12 +177,10 @@
       c.style.animationDuration = (2 + Math.random() * 2) + "s";
 
       document.body.appendChild(c);
-
       setTimeout(() => c.remove(), 4000);
     }
   }
 
-  // ❤️ Yes button action
   yesBtn.addEventListener("click", () => {
     message.style.display = "block";
     noBtn.style.display = "none";
