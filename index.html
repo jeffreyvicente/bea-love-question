@@ -45,8 +45,7 @@
   .buttons {
     position: relative;
     width: 100%;
-    height: 180px;
-
+    height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,17 +57,18 @@
     border: none;
     border-radius: 14px;
     cursor: pointer;
+    position: absolute; /* 👈 stack them on top of each other */
+    transition: transform 0.2s ease;
   }
 
   #yesBtn {
     background: #a0e7e5;
-    margin-right: 20px;
     z-index: 2;
   }
 
   #noBtn {
     background: #ffaecc;
-    position: relative;
+    z-index: 3;
   }
 
   #message {
@@ -133,16 +133,50 @@
 
   let activated = false;
 
+  // 🎯 start both buttons centered on top of each other
+  function centerButtons() {
+    const rect = playArea.getBoundingClientRect();
+
+    const x = rect.width / 2 - noBtn.offsetWidth / 2;
+    const y = rect.height / 2 - noBtn.offsetHeight / 2;
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    yesBtn.style.left = x + "px";
+    yesBtn.style.top = y + "px";
+  }
+
   function moveNoButton() {
     const rect = playArea.getBoundingClientRect();
 
     const maxX = rect.width - noBtn.offsetWidth;
     const maxY = rect.height - noBtn.offsetHeight;
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    let x, y, safe = false;
 
-    noBtn.style.position = "absolute";
+    while (!safe) {
+      x = Math.random() * maxX;
+      y = Math.random() * maxY;
+
+      const noLeft = x;
+      const noTop = y;
+
+      const yesRect = yesBtn.getBoundingClientRect();
+      const playRect = playArea.getBoundingClientRect();
+
+      const yesLeft = yesRect.left - playRect.left;
+      const yesTop = yesRect.top - playRect.top;
+
+      const overlap =
+        noLeft < yesLeft + yesBtn.offsetWidth &&
+        noLeft + noBtn.offsetWidth > yesLeft &&
+        noTop < yesTop + yesBtn.offsetHeight &&
+        noTop + noBtn.offsetHeight > yesTop;
+
+      if (!overlap) safe = true;
+    }
+
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
   }
@@ -152,7 +186,7 @@
     moveNoButton();
   }
 
-  // 🖱 No button behavior
+  // 🖱 No button triggers movement
   noBtn.addEventListener("mouseenter", () => {
     if (activated) moveNoButton();
   });
@@ -191,6 +225,8 @@
       setTimeout(() => c.remove(), 4000);
     }
   }
+
+  window.onload = centerButtons;
 </script>
 
 </body>
