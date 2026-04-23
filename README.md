@@ -19,7 +19,7 @@ A fun, interactive webpage that asks a very important question 😄
 
 ## 🚀 Live Demo
 
-https://yourusername.github.io/bea-love-question/
+https://jeffreyvicente.github.io/bea-love-question/
 
 ---
 
